@@ -1,5 +1,7 @@
 # PrestaControl API (`prestamoservice`)
 
+**Autor:** Julio Rodriguez  
+
 API REST en Spring Boot 3 + Java 21 protegida con JWT (`jjwt`) y Spring Security stateless.
 
 ## Requisitos
