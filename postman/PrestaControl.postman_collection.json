@@ -1,0 +1,410 @@
+{
+  "info": {
+    "name": "PrestaControl API",
+    "_postman_id": "a1b2c3d4-e5f6-4789-abcd-1234567890ab",
+    "description": "Colección de pruebas para la API REST PrestaControl (Spring Boot + JWT).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "prestamoId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Auth - Registrar prestamista",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "if (pm.response.code === 201) {",
+              "    pm.collectionVariables.set('token', pm.response.json().token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Prestamista Demo\",\n  \"email\": \"demo@prestacontrol.com\",\n  \"password\": \"secret123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "register"]
+        }
+      }
+    },
+    {
+      "name": "2. Auth - Iniciar sesión",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "    pm.collectionVariables.set('token', pm.response.json().token);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"demo@prestacontrol.com\",\n  \"password\": \"secret123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "3. Préstamos - Registrar préstamo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "if (pm.response.code === 201) {",
+              "    pm.collectionVariables.set('prestamoId', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente\": \"Carlos Mendoza\",\n  \"dni\": \"45678912\",\n  \"monto\": 1000.00,\n  \"interes\": 15.00,\n  \"fechaVencimiento\": \"2026-12-30\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/prestamos",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos"]
+        }
+      }
+    },
+    {
+      "name": "4. Préstamos - Listar préstamos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/prestamos",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos"]
+        }
+      }
+    },
+    {
+      "name": "5. Préstamos - Obtener por ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/{{prestamoId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos", "{{prestamoId}}"]
+        }
+      }
+    },
+    {
+      "name": "6. Préstamos - Buscar (?q=)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/prestamos?q=Carlos",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos"],
+          "query": [
+            {
+              "key": "q",
+              "value": "Carlos"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "7. Préstamos - Actualizar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente\": \"Carlos Mendoza\",\n  \"dni\": \"45678912\",\n  \"monto\": 1200.00,\n  \"interes\": 10.00,\n  \"fechaVencimiento\": \"2026-12-30\",\n  \"pagado\": false\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/{{prestamoId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos", "{{prestamoId}}"]
+        }
+      }
+    },
+    {
+      "name": "8. Préstamos - Marcar pagado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200 OK y pagado=true', function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.json().pagado).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente\": \"Carlos Mendoza\",\n  \"dni\": \"45678912\",\n  \"monto\": 1200.00,\n  \"interes\": 10.00,\n  \"fechaVencimiento\": \"2026-12-30\",\n  \"pagado\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/{{prestamoId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos", "{{prestamoId}}"]
+        }
+      }
+    },
+    {
+      "name": "9. Préstamos - Resumen de cartera",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/resumen",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos", "resumen"]
+        }
+      }
+    },
+    {
+      "name": "10. Préstamos - Eliminar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 204 No Content', function () {",
+              "    pm.response.to.have.status(204);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/prestamos/{{prestamoId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos", "{{prestamoId}}"]
+        }
+      }
+    },
+    {
+      "name": "11. Seguridad - Listar SIN token (espera 401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 401 Unauthorized', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/prestamos",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos"]
+        }
+      }
+    },
+    {
+      "name": "12. Seguridad - Token alterado (espera 401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 401 Unauthorized', function () {",
+              "    pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.tokenalterado.invalido",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/prestamos",
+          "host": ["{{baseUrl}}"],
+          "path": ["prestamos"]
+        }
+      }
+    }
+  ]
+}

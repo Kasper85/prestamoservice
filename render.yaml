@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: prestamoservice
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: JWT_EXPIRATION_MS
+        value: 3600000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        fromDatabase:
+          name: prestacontrol-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: prestacontrol-db
+          property: password
+
+databases:
+  - name: prestacontrol-db
+    plan: free
